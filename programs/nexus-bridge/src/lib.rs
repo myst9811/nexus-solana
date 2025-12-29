@@ -7,7 +7,7 @@ pub mod errors;
 use instructions::*;
 use state::*;
 
-declare_id!("11111111111111111111111111111111");
+declare_id!("E8biA2oy2gbMRRWmvU66N9vAmb8qCFmNE2P5qGuTTY1f");
 
 #[program]
 pub mod nexus_bridge {

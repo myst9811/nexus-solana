@@ -4,21 +4,25 @@
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-nexus_bridge = "BRGx8VkKcPqsQNH5jHJdWL8nfvUaS9HvqCjt7z8XYPWE"
-
 [programs.devnet]
 nexus_bridge = "BRGx8VkKcPqsQNH5jHJdWL8nfvUaS9HvqCjt7z8XYPWE"
+
+[programs.localnet]
+nexus_bridge = "E8biA2oy2gbMRRWmvU66N9vAmb8qCFmNE2P5qGuTTY1f"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 
+[hooks]
+
 [test]
 startup_wait = 10000
+shutdown_wait = 2000
+upgradeable = false

@@ -18,7 +18,7 @@ pub struct UnlockTokens<'info> {
         init,
         payer = authority,
         space = ProcessedTransaction::LEN,
-        seeds = [b"processed_tx", eth_tx_hash.as_bytes()],
+        seeds = [b"processed_tx", eth_tx_hash.as_ref()],
         bump
     )]
     pub processed_tx: Account<'info, ProcessedTransaction>,

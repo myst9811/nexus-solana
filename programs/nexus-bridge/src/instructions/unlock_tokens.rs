@@ -4,7 +4,6 @@ use crate::state::{BridgeState, ProcessedTransaction};
 use crate::errors::BridgeError;
 
 #[derive(Accounts)]
-#[instruction(amount: u64, eth_tx_hash: String)]
 pub struct UnlockTokens<'info> {
     #[account(
         mut,
@@ -13,13 +12,11 @@ pub struct UnlockTokens<'info> {
         has_one = authority @ BridgeError::Unauthorized
     )]
     pub bridge_state: Account<'info, BridgeState>,
-    
+
     #[account(
         init,
         payer = authority,
-        space = ProcessedTransaction::LEN,
-        seeds = [b"processed_tx", &eth_tx_hash.as_bytes()[..]],
-        bump
+        space = ProcessedTransaction::LEN
     )]
     pub processed_tx: Account<'info, ProcessedTransaction>,
     

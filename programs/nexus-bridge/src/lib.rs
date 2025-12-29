@@ -28,12 +28,12 @@ pub mod nexus_bridge {
         instructions::lock_tokens::handler(ctx, amount, eth_address)
     }
 
-    /// Unlock SPL tokens when bridging from Ethereum
-    pub fn unlock_tokens(
-        ctx: Context<UnlockTokens>,
-        amount: u64,
-        eth_tx_hash: String,
-    ) -> Result<()> {
-        instructions::unlock_tokens::handler(ctx, amount, eth_tx_hash)
-    }
+    // /// Unlock SPL tokens when bridging from Ethereum
+    // pub fn unlock_tokens(
+    //     ctx: Context<UnlockTokens>,
+    //     amount: u64,
+    //     eth_tx_hash: String,
+    // ) -> Result<()> {
+    //     instructions::unlock_tokens::handler(ctx, amount, eth_tx_hash)
+    // }
 }

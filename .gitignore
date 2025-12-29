@@ -1,0 +1,36 @@
+# Anchor
+.anchor
+target/
+**/*.rs.bk
+test-ledger/
+.DS_Store
+
+# Node
+node_modules/
+dist/
+package-lock.json
+yarn.lock
+
+# IDL
+*.so
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Solana
+keypairs/
+*.key
+
+# Build artifacts
+programs/**/*.so

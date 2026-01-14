@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Token, TokenAccount, Transfer};
+use anchor_spl::token::{self, Token, TokenAccount, Transfer, Mint};
+use anchor_spl::associated_token::AssociatedToken;
 use crate::state::{BridgeState, ProcessedTransaction};
 use crate::errors::BridgeError;
 
@@ -24,23 +25,29 @@ pub struct UnlockTokens<'info> {
     pub processed_tx: Account<'info, ProcessedTransaction>,
     
     pub authority: Signer<'info>,
-    
+
     /// CHECK: This is the user receiving unlocked tokens
     pub recipient: AccountInfo<'info>,
-    
+
+    /// Token mint for the SPL token being bridged
+    pub token_mint: Account<'info, Mint>,
+
     #[account(
         mut,
-        constraint = recipient_token_account.owner == recipient.key()
+        constraint = recipient_token_account.owner == recipient.key(),
+        constraint = recipient_token_account.mint == token_mint.key()
     )]
     pub recipient_token_account: Account<'info, TokenAccount>,
-    
+
     #[account(
         mut,
-        constraint = bridge_token_account.owner == bridge_state.key()
+        associated_token::mint = token_mint,
+        associated_token::authority = bridge_state
     )]
     pub bridge_token_account: Account<'info, TokenAccount>,
-    
+
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 

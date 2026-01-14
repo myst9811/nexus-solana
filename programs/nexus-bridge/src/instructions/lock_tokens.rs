@@ -25,20 +25,27 @@ pub struct LockTokens<'info> {
     
     #[account(mut)]
     pub user: Signer<'info>,
-    
+
+    /// Token mint for the SPL token being bridged
+    pub token_mint: Account<'info, Mint>,
+
     #[account(
         mut,
-        constraint = user_token_account.owner == user.key()
+        constraint = user_token_account.owner == user.key(),
+        constraint = user_token_account.mint == token_mint.key()
     )]
     pub user_token_account: Account<'info, TokenAccount>,
-    
+
     #[account(
-        mut,
-        constraint = bridge_token_account.owner == bridge_state.key()
+        init_if_needed,
+        payer = user,
+        associated_token::mint = token_mint,
+        associated_token::authority = bridge_state
     )]
     pub bridge_token_account: Account<'info, TokenAccount>,
-    
+
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 

@@ -23,7 +23,8 @@ pub struct UnlockTokens<'info> {
         bump
     )]
     pub processed_tx: Account<'info, ProcessedTransaction>,
-    
+
+    #[account(mut)]
     pub authority: Signer<'info>,
 
     /// CHECK: This is the user receiving unlocked tokens
@@ -70,11 +71,12 @@ pub fn handler(
     );
 
     // Transfer tokens from bridge to recipient
-    let seeds = &[
+    let bridge_bump = ctx.accounts.bridge_state.bump;
+    let seeds: &[&[u8]] = &[
         b"bridge",
-        &[ctx.accounts.bridge_state.bump],
+        &[bridge_bump],
     ];
-    let signer = &[&seeds[..]];
+    let signer = &[seeds];
 
     let cpi_accounts = Transfer {
         from: ctx.accounts.bridge_token_account.to_account_info(),

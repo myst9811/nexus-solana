@@ -5,7 +5,7 @@ use crate::state::BridgeState;
 pub struct Initialize<'info> {
     #[account(
         init,
-        payer = authority,
+        payer = authority,  
         space = BridgeState::LEN,
         seeds = [b"bridge"],
         bump

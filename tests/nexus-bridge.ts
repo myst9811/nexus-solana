@@ -343,9 +343,10 @@ describe("nexus-bridge", () => {
     });
 
     it("Fails with invalid transaction hash format", async () => {
-      const invalidTxHash = "0xinvalid";
+      // Use a valid-looking but too short tx hash
+      const invalidTxHash = "0xinvalid0000000000000000000000000000000000000000000000000000000";
       const [processedTx] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("processed_tx"), Buffer.from(invalidTxHash)],
+        [Buffer.from("processed_tx"), Buffer.from(invalidTxHash.slice(2, 34))],
         program.programId
       );
 
@@ -374,7 +375,7 @@ describe("nexus-bridge", () => {
     it("Fails with unauthorized caller", async () => {
       const newTxHash = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890";
       const [processedTx] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("processed_tx"), Buffer.from(newTxHash)],
+        [Buffer.from("processed_tx"), Buffer.from(newTxHash.slice(2, 34))],
         program.programId
       );
 
@@ -414,7 +415,7 @@ describe("nexus-bridge", () => {
     it("Fails with insufficient bridge balance", async () => {
       const newTxHash = "0x9999999999999999999999999999999999999999999999999999999999999999";
       const [processedTx] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("processed_tx"), Buffer.from(newTxHash)],
+        [Buffer.from("processed_tx"), Buffer.from(newTxHash.slice(2, 34))],
         program.programId
       );
 

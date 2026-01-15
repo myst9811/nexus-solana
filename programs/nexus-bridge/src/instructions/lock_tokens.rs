@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer, Mint};
 use anchor_spl::associated_token::AssociatedToken;
 use crate::state::{BridgeState, LockEvent};
-use crate::errors::BridgeError;
+use crate::errors::{BridgeError, MIN_BRIDGE_AMOUNT, MAX_BRIDGE_AMOUNT};
 
 #[derive(Accounts)]
 #[instruction(amount: u64, eth_address: String)]
@@ -49,15 +49,26 @@ pub struct LockTokens<'info> {
     pub system_program: Program<'info, System>,
 }
 
+/// Validates that a string contains only valid hexadecimal characters
+fn is_valid_hex(s: &str) -> bool {
+    s.chars().all(|c| c.is_ascii_hexdigit())
+}
+
 pub fn handler_lock_tokens(
     ctx: Context<LockTokens>,
     amount: u64,
     eth_address: String,
 ) -> Result<()> {
-    // Validate inputs
+    // Validate amount
     require!(amount > 0, BridgeError::InvalidAmount);
+    require!(amount >= MIN_BRIDGE_AMOUNT, BridgeError::AmountBelowMinimum);
+    require!(amount <= MAX_BRIDGE_AMOUNT, BridgeError::AmountExceedsMaximum);
+
+    // Validate Ethereum address format (0x + 40 hex chars)
     require!(
-        eth_address.len() == 42 && eth_address.starts_with("0x"),
+        eth_address.len() == 42
+            && eth_address.starts_with("0x")
+            && is_valid_hex(&eth_address[2..]),
         BridgeError::InvalidEthAddress
     );
 

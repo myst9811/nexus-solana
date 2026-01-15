@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer, Mint};
 use anchor_spl::associated_token::AssociatedToken;
 use crate::state::{BridgeState, ProcessedTransaction};
-use crate::errors::BridgeError;
+use crate::errors::{BridgeError, MIN_BRIDGE_AMOUNT, MAX_BRIDGE_AMOUNT};
 
 #[derive(Accounts)]
 #[instruction(amount: u64, eth_tx_hash: String)]
@@ -52,15 +52,26 @@ pub struct UnlockTokens<'info> {
     pub system_program: Program<'info, System>,
 }
 
+/// Validates that a string contains only valid hexadecimal characters
+fn is_valid_hex(s: &str) -> bool {
+    s.chars().all(|c| c.is_ascii_hexdigit())
+}
+
 pub fn handler_unlock_tokens(
     ctx: Context<UnlockTokens>,
     amount: u64,
     eth_tx_hash: String,
 ) -> Result<()> {
-    // Validate inputs
+    // Validate amount
     require!(amount > 0, BridgeError::InvalidAmount);
+    require!(amount >= MIN_BRIDGE_AMOUNT, BridgeError::AmountBelowMinimum);
+    require!(amount <= MAX_BRIDGE_AMOUNT, BridgeError::AmountExceedsMaximum);
+
+    // Validate Ethereum transaction hash format (0x + 64 hex chars)
     require!(
-        eth_tx_hash.len() == 66 && eth_tx_hash.starts_with("0x"),
+        eth_tx_hash.len() == 66
+            && eth_tx_hash.starts_with("0x")
+            && is_valid_hex(&eth_tx_hash[2..]),
         BridgeError::InvalidTxHash
     );
 

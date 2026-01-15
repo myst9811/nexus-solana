@@ -16,7 +16,7 @@ pub mod nexus_bridge {
 
     /// Initialize the bridge program
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        instructions::initialize::handler(ctx)
+        instructions::initialize::handler_initialize(ctx)
     }
 
     /// Lock SPL tokens to bridge to Ethereum
@@ -25,7 +25,7 @@ pub mod nexus_bridge {
         amount: u64,
         eth_address: String,
     ) -> Result<()> {
-        instructions::lock_tokens::handler(ctx, amount, eth_address)
+        instructions::lock_tokens::handler_lock_tokens(ctx, amount, eth_address)
     }
 
     /// Unlock SPL tokens when bridging from Ethereum
@@ -34,6 +34,6 @@ pub mod nexus_bridge {
         amount: u64,
         eth_tx_hash: String,
     ) -> Result<()> {
-        instructions::unlock_tokens::handler(ctx, amount, eth_tx_hash)
+        instructions::unlock_tokens::handler_unlock_tokens(ctx, amount, eth_tx_hash)
     }
 }

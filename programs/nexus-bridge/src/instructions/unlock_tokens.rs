@@ -52,7 +52,7 @@ pub struct UnlockTokens<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(
+pub fn handler_unlock_tokens(
     ctx: Context<UnlockTokens>,
     amount: u64,
     eth_tx_hash: String,

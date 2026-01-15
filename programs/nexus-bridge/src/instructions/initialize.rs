@@ -18,7 +18,7 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<Initialize>) -> Result<()> {
+pub fn handler_initialize(ctx: Context<Initialize>) -> Result<()> {
     let bridge_state = &mut ctx.accounts.bridge_state;
     
     bridge_state.authority = ctx.accounts.authority.key();

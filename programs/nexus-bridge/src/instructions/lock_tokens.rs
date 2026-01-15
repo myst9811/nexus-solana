@@ -49,7 +49,7 @@ pub struct LockTokens<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(
+pub fn handler_lock_tokens(
     ctx: Context<LockTokens>,
     amount: u64,
     eth_address: String,

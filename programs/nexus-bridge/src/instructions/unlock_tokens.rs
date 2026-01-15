@@ -19,7 +19,7 @@ pub struct UnlockTokens<'info> {
         init,
         payer = authority,
         space = ProcessedTransaction::LEN,
-        seeds = [b"processed_tx", eth_tx_hash.as_bytes()],
+        seeds = [b"processed_tx", &eth_tx_hash.as_bytes()[2..34]],
         bump
     )]
     pub processed_tx: Account<'info, ProcessedTransaction>,
@@ -55,6 +55,18 @@ pub struct UnlockTokens<'info> {
 /// Validates that a string contains only valid hexadecimal characters
 fn is_valid_hex(s: &str) -> bool {
     s.chars().all(|c| c.is_ascii_hexdigit())
+}
+
+/// Converts a hex string (without 0x prefix) to a 32-byte array
+fn hex_to_bytes(hex: &str) -> Option<[u8; 32]> {
+    if hex.len() != 64 {
+        return None;
+    }
+    let mut bytes = [0u8; 32];
+    for i in 0..32 {
+        bytes[i] = u8::from_str_radix(&hex[i * 2..i * 2 + 2], 16).ok()?;
+    }
+    Some(bytes)
 }
 
 pub fn handler_unlock_tokens(
